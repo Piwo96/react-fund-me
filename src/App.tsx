@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import ConnectButton from "./Components/ConnectButton"
+import FundButton from "./Components/FundButton";
 import { checkConnectionState } from "./Helper/utils";
 
 
@@ -31,6 +32,7 @@ function App() {
     <div> 
       {!connected && renderConnectButton()}
       {connected && renderConnectButton()}
+      <FundButton />
     </div>
   );
 }

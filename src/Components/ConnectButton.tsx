@@ -1,4 +1,5 @@
 import React from "react";
+import { connectToMetamask, checkConnectionState } from "../Helper/utils";
 
 interface ConnectButtonProps {
     className: string,
@@ -25,18 +26,15 @@ class ConnectButton extends React.Component<ConnectButtonProps, ConnectButtonSta
     }
     
     connect = async () => {
-        if(typeof window.ethereum !== "undefined"){
-            await window.ethereum.request({method: "eth_requestAccounts"});
-            this.setState({
-                connected: true,
-            });
-            console.log("Connected!");
-        } else {
-            this.setState({
-                connected: false
-            });
-            console.log("No metamask!");
-        }
+        await connectToMetamask();
+        await this.updateConnectionState();
+    }
+
+    updateConnectionState = async () => {
+        const connected = await checkConnectionState();
+        this.setState({
+            connected: connected,
+        });
     }
 
     render() { 
