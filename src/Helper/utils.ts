@@ -1,7 +1,6 @@
 import ethers from "ethers";
-import { ContractInterface } from "ethers";
 import { CONTRACT_ADDRESS } from "./constants";
-import fs from "fs";
+import abi from "../../abi.json";
 
 export async function checkConnectionState(): Promise<boolean> {
     if (typeof window.ethereum !== "undefined") {
@@ -30,18 +29,19 @@ export async function connectToMetamask(): Promise<void> {
 }
 
 export function readFile(filePath:string){
-    const file = fs.readFileSync(filePath);
+    const file = "";
     return file;
 }
 
 export async function fund(ethAmount: number): Promise<void>{
     console.log(`Funding with ${ethAmount}`);
     if(typeof window.ethereum !== "undefined"){
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
+        // const provider = new ethers.providers.Web3Provider(window.ethereum);
+        // const signer = provider.getSigner();
         const abiBuff = readFile("./abi.json");
         const abi = JSON.parse(abiBuff.toString());
-        const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+        console.log(abi);
+        // const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
     }
 }
 
