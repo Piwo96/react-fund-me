@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import ConnectButton from "./Components/ConnectButton"
-import FundButton from "./Components/FundButton";
+import FundForm from "./Components/FundForm";
+import BalacneItem from "./Components/BalanceItem";
+import WithdrawButton from "./Components/WithdrawButton";
 import { checkConnectionState } from "./Helper/utils";
 
 
@@ -32,7 +34,9 @@ function App() {
     <div> 
       {!connected && renderConnectButton()}
       {connected && renderConnectButton()}
-      <FundButton />
+      <FundForm />
+      <BalacneItem />
+      <WithdrawButton />
     </div>
   );
 }

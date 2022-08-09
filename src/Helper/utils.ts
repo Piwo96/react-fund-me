@@ -1,4 +1,4 @@
-import ethers from "ethers";
+import { ethers } from "ethers";
 import { CONTRACT_ADDRESS } from "./constants";
 import abi from "../abi.json";
 
@@ -17,9 +17,9 @@ export async function checkConnectionState(): Promise<boolean> {
 }
 
 export async function connectToMetamask(): Promise<void> {
-    if(typeof window.ethereum !== "undefined"){
+    if (typeof window.ethereum !== "undefined") {
         try {
-            await window.ethereum.request({method: "eth_requestAccounts"});    
+            await window.ethereum.request({ method: "eth_requestAccounts" });
         } catch (error) {
             console.log(error);
         }
@@ -28,17 +28,46 @@ export async function connectToMetamask(): Promise<void> {
     }
 }
 
-export async function fund(ethAmount: number): Promise<void>{
+export async function fund(ethAmount: string): Promise<void> {
     console.log(`Funding with ${ethAmount}`);
-    if(typeof window.ethereum !== "undefined"){
+    if (typeof window.ethereum !== "undefined") {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-        console.log(abi);
         const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
-        console.log(contract)
+        try {
+            const txRes = await contract.fund({
+                value: ethers.utils.parseEther(ethAmount),
+            });
+            await listenForTransactionMine(txRes, provider);
+            console.log("Done");
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 
-export async function withdraw(): Promise<void>{
-    
+function listenForTransactionMine(
+    transactionResponse: any,
+    provider: ethers.providers.Web3Provider
+) {
+    console.log(`Mining ${transactionResponse.hash} ...`);
+    return new Promise<void>((resolve, reject) => {
+        provider.once(transactionResponse.hash, (transactionReceipt) => {
+            console.log(`Completed with ${transactionReceipt.confirmations}`);
+            resolve();
+        });
+    });
 }
+
+export async function getBalance(): Promise<string> {
+    if (window.ethereum !== "undefined") {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const balance = (
+            await provider.getBalance(CONTRACT_ADDRESS)
+        ).toString();
+        return ethers.utils.formatEther(balance);
+    }
+    return "0";
+}
+
+export async function withdraw(): Promise<void> {}
