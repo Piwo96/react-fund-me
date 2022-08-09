@@ -1,24 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import ConnectButton from "./Components/ConnectButton"
+import { checkConnectionState } from "./Helper/utils";
+
 
 function App() {
+  const [connected, setConnectionState] = useState<any | null>(null);
+
+  useEffect(() => {
+    const onLoad = async () => {
+      await checkIfWalletIsConnected();
+    }
+    window.addEventListener('load', onLoad);
+    return () => window.removeEventListener('load', onLoad);
+  }, [])
+
+  const checkIfWalletIsConnected = async () => {
+      const connState = await checkConnectionState();
+      console.log(connState);
+      setConnectionState(connState);
+  }
+
+  const renderConnectButton = () => {
+    return (
+      <ConnectButton className="connect-button" name="Connect" connected={connected} />
+    )
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div> 
+      {!connected && renderConnectButton()}
+      {connected && renderConnectButton()}
     </div>
   );
 }
