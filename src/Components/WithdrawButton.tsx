@@ -1,4 +1,5 @@
 import React from "react";
+import { withdraw } from "../Helper/utils";
 
 
 interface WithdrawButtonProps {
@@ -14,9 +15,14 @@ class WithdrawButton extends React.Component<WithdrawButtonProps, WithdrawButton
     //     super(props);
     //     this.state = { :  };
     // }
+
+    withdraw = async() => {
+        await withdraw();
+    }
+
     render() { 
         return (  
-            <button>Withdraw</button>
+            <button onClick={this.withdraw}>Withdraw</button>
         );
     }
 }

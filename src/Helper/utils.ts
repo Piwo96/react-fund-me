@@ -70,4 +70,16 @@ export async function getBalance(): Promise<string> {
     return "0";
 }
 
-export async function withdraw(): Promise<void> {}
+export async function withdraw(): Promise<void> {
+    if (window.ethereum !== "undefined") {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+        try {
+            const txRes = await contract.withdraw();
+            await listenForTransactionMine(txRes, provider);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
