@@ -32,6 +32,7 @@ function App() {
 
   return (
     <div> 
+      <header>Fund Me App</header>
       {!connected && renderConnectButton()}
       {connected && renderConnectButton()}
       <FundForm />
