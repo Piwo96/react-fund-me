@@ -23,6 +23,11 @@ class FundForm extends React.Component<FundFormProps, FundFormState> {
     fund = async (event: any) => {
         event.preventDefault();
         await fund(this.state.inputValue);
+        this.resetInputItem();
+    }
+
+    resetInputItem(){
+        this.setState({inputValue: "0"});
     }
 
     render() { 
